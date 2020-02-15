@@ -4,7 +4,7 @@ A Python script to assist transforming not square images into square images. It 
 
 ## What I Need? 🤷‍♂
 
-1.[Python 3. X](https://www.python.org/downloads/) - I used 3.8.1, so I'd suggest that version; but hey, you do you.
+1. [Python 3. X](https://www.python.org/downloads/) - I used 3.8.1, so I'd suggest that version; but hey, you do you.
 
 1. Lots of images that aren't square.
 
@@ -15,8 +15,9 @@ A Python script to assist transforming not square images into square images. It 
 1. Put your image directory in the same directory as this script.
 
 1. switch to the Python env (unless you want to install, or already have, the necessary libraries installed).
-    1. Mac/Linux type `source ./Scripts/activate` 
-    1. Windows ([sorry](https://docs.python.org/3/library/venv.html))
+
+   1. Mac/Linux type `source ./Scripts/activate`
+   1. Windows ([sorry](https://docs.python.org/3/library/venv.html))
 
 1. Open `crop_n_resize.py` in any text or code editor. And change the `config` settings at the top of the file and save.
 
