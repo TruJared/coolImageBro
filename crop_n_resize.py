@@ -8,7 +8,9 @@ import time
 config = {
     'in_dir': 'csgCategory',
     'width': 90,
-    'bg_color': (255, 255, 255)
+    'height': 90,
+    'bg_color': (255, 255, 255),
+    'quality': 49
 }
 
 # end config
@@ -39,7 +41,7 @@ for image_name in all_images:
     else:
         cropped_img = img
 
-    # resize (keep  ratio) -> not sure if this step is needed
+    # resize (keep  ratio) -> in some cases this might actually scale the image UP
     wpercent = (config['width']/float(cropped_img.size[0]))
     hsize = int((float(cropped_img.size[1])*float(wpercent)))
     sized_img = cropped_img.resize(
@@ -63,6 +65,8 @@ for image_name in all_images:
     # save
     if final_img.mode != 'RGB':
         final_img = final_img.convert('RGB')
-
-    final_img.save(f'{out_dir}/{image_name}')
+    # one last final resize
+    final_img = final_img.resize(
+        (config['width'], config['height']), Image.ANTIALIAS)
+    final_img.save(f'{out_dir}/{image_name}', quality=config['quality'])
     print(f'{image_name} saved to {out_dir}')
