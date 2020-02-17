@@ -4,21 +4,19 @@ import time
 
 
 # config
-
+# * set bg_color to RGB or None to use image default bg color
 config = {
-    'in_dir': 'cg-images',
-    'width': 90
+    'in_dir': 'csgCategory',
+    'width': 90,
+    'bg_color': (255, 255, 255)
 }
 
 # end config
 
-# create directories and error log file
-error_log = f'{config["in_dir"]}--{time.time()}.log'
+# create out directory
 out_dir = f'{config["in_dir"]}--completed'
-failed_dir = f'{config["in_dir"]}--failed'
-for directory in [out_dir, failed_dir]:
-    if not os.path.exists(directory):
-        os.makedirs(directory)
+if not os.path.exists(out_dir):
+    os.makedirs(out_dir)
 
 
 # open directory and create image array
@@ -38,40 +36,33 @@ for image_name in all_images:
     # loop over images and crop them down to the edge of image
     if bbox:
         cropped_img = img.crop(bbox)
-
-        # resize (keep  ratio) -> not sure if this step is needed
-        wpercent = (config['width']/float(cropped_img.size[0]))
-        hsize = int((float(cropped_img.size[1])*float(wpercent)))
-        sized_img = cropped_img.resize(
-            (config['width'], hsize), Image.ANTIALIAS)
-
-        # add bg to make it a square
-        x, y = sized_img.size
-        if x != y:
-            # get the bg color
-            rgb_img = img.convert('RGB')
-            r, g, b = rgb_img.getpixel((0, 0))
-
-            size = max(config['width'], x, y)
-            final_img = Image.new('RGBA', (size, size), (r, g, b, 0))
-            final_img.paste(
-                sized_img, (int((size - x) / 2), int((size - y) / 2)))
-        else:
-            final_img = cropped_img
-
-        # save
-        if final_img.mode != 'RGB':
-            final_img = final_img.convert('RGB')
-
-        final_img.save(f'{out_dir}/{image_name}')
-        print(f'{image_name} saved to {out_dir}')
     else:
-        # these are proably really bad :(
-        if img.mode != 'RGB':
-            img = img.convert('RGB')
-        img.save(f'{failed_dir}/{image_name}')
-        print(f'{image_name} possibly not cool, saving to {failed_dir}.')
+        cropped_img = img
 
-        with open(error_log, 'a') as fp:
-            fp.write(
-                f'{image_name} possibly not cool, saving to {failed_dir}. \n')
+    # resize (keep  ratio) -> not sure if this step is needed
+    wpercent = (config['width']/float(cropped_img.size[0]))
+    hsize = int((float(cropped_img.size[1])*float(wpercent)))
+    sized_img = cropped_img.resize(
+        (config['width'], hsize), Image.ANTIALIAS)
+
+    # add bg to make it a square
+    x, y = sized_img.size
+    if x != y:
+        # get the bg color
+        rgb_img = img.convert('RGB')
+        r, g, b = config['bg_color'] if config['bg_color'] else rgb_img.getpixel(
+            (0, 0))
+
+        size = max(config['width'], x, y)
+        final_img = Image.new('RGBA', (size, size), (r, g, b, 0))
+        final_img.paste(
+            sized_img, (int((size - x) / 2), int((size - y) / 2)))
+    else:
+        final_img = cropped_img
+
+    # save
+    if final_img.mode != 'RGB':
+        final_img = final_img.convert('RGB')
+
+    final_img.save(f'{out_dir}/{image_name}')
+    print(f'{image_name} saved to {out_dir}')
