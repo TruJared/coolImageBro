@@ -10,7 +10,7 @@ config = {
     'width': 90,
     'height': 90,
     'bg_color': (255, 255, 255),
-    'quality': 49
+    'quality': 100
 }
 
 # end config
