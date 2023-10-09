@@ -3,8 +3,8 @@ const path = require("path");
 const sharp = require("sharp");
 
 const settings = {
-  inDirectoryName: "images",
-  outDirectoryName: "compressed",
+	inDirectoryName: "images",
+	outDirectoryName: "compressed",
 	format: "webp",
 	quality: 100,
 	width: 1920,
@@ -14,12 +14,18 @@ const settings = {
 	withoutEnlargement: true,
 };
 
+let totalSizeBefore = 0;
+let totalSizeAfter = 0;
+
 const images = fs.readdirSync(path.join(__dirname, settings.inDirectoryName));
 
+// todo handle not image files and promisify //
 images.forEach(async (image) => {
 	const originalFileSize =
 		fs.statSync(path.join(__dirname, settings.inDirectoryName, image)).size /
 		(1024 * 1024);
+
+	totalSizeBefore += originalFileSize;
 
 	const imageBuffer = await sharp(
 		path.join(__dirname, settings.inDirectoryName, image)
@@ -37,11 +43,37 @@ images.forEach(async (image) => {
 			fit: settings.fit,
 			background: settings.background,
 			withoutEnlargement: settings.withoutEnlargement,
-    });
+		});
 
-  await transformedImg.toFile(path.join(__dirname, settings.outDirectoryName, `${image.split(".")[0]}.${settings.format}`));
+	await transformedImg.toFile(
+		path.join(
+			__dirname,
+			settings.outDirectoryName,
+			`${image.split(".")[0]}.${settings.format}`
+		)
+	);
 
-  const newFileSize = fs.statSync(path.join(__dirname, settings.outDirectoryName, `${image.split(".")[0]}.${settings.format}`)).size / (1024 * 1024);
+	const newFileSize =
+		fs.statSync(
+			path.join(
+				__dirname,
+				settings.outDirectoryName,
+				`${image.split(".")[0]}.${settings.format}`
+			)
+		).size /
+		(1024 * 1024);
 
-  console.log(`${image.split(".")[0]}.${settings.format} new file size is ${newFileSize.toFixed(2)} MB`);
+	totalSizeAfter += newFileSize;
+
+	console.log(
+		`${image.split(".")[0]}.${
+			settings.format
+		} new file size is ${newFileSize.toFixed(2)} MB`
+	);
+	console.log(`Total file size before: ${totalSizeBefore.toFixed(2)} MB`);
+	console.log(`Total file size after: ${totalSizeAfter.toFixed(2)} MB`);
+	console.log(
+		`Total file size saved: ${(totalSizeBefore - totalSizeAfter).toFixed(2)} MB`
+	);
+	console.log("-------------------");
 });
