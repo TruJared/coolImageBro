@@ -5,10 +5,10 @@ const sharp = require("sharp");
 const settings = {
 	inDirectoryName: "images",
 	outDirectoryName: "compressed",
-	format: "webp",
+	format: "png",
 	quality: 100,
-	width: 1920,
-	height: 1080,
+	width: 1280,
+	height: 1280,
 	fit: "cover", // https://sharp.pixelplumbing.com/api-resize#resize
 	background: { r: 255, g: 255, b: 255, alpha: 1 }, // when fit is cover or contain
 	withoutEnlargement: true,
@@ -70,10 +70,10 @@ images.forEach(async (image) => {
 			settings.format
 		} new file size is ${newFileSize.toFixed(2)} MB`
 	);
-	console.log(`Total file size before: ${totalSizeBefore.toFixed(2)} MB`);
-	console.log(`Total file size after: ${totalSizeAfter.toFixed(2)} MB`);
+	console.log(`Total all files size before: ${totalSizeBefore.toFixed(2)} MB`);
+	console.log(`Total all files size after: ${totalSizeAfter.toFixed(2)} MB`);
 	console.log(
-		`Total file size saved: ${(totalSizeBefore - totalSizeAfter).toFixed(2)} MB`
+		`Total all files size saved: ${(totalSizeBefore - totalSizeAfter).toFixed(2)} MB`
 	);
 	console.log("-------------------");
 });
